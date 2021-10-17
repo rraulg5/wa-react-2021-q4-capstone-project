@@ -1,5 +1,9 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import {
+  faSearch,
+  faShoppingCart,
+  faUserCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 import { MENU_ITEMS } from '../utils/constants';
 
@@ -8,7 +12,7 @@ export const Navbar = () => {
     <Container>
       <Wrapper>
         <Left>
-          <strong>LOGO</strong>
+          <Logo>FURNITFY</Logo>
         </Left>
         <Center>
           <MenuContainer>
@@ -21,10 +25,17 @@ export const Navbar = () => {
         </Center>
         <Right>
           <SearchContainer>
-            <Input />
+            <Input placeholder="Search..." />
             <SearchIcon icon={faSearch} />
           </SearchContainer>
-          <FontAwesomeIcon icon={faShoppingCart} />
+          <FontAwesomeIcon
+            icon={faShoppingCart}
+            style={{ color: '#222', fontSize: 25, marginLeft: 30 }}
+          />
+          <FontAwesomeIcon
+            icon={faUserCircle}
+            style={{ color: '#666', fontSize: 35, marginLeft: 30 }}
+          />
         </Right>
       </Wrapper>
     </Container>
@@ -33,13 +44,13 @@ export const Navbar = () => {
 
 const Container = styled.div`
   background-color: #eee;
-  height: 60px;
+  height: auto;
 `;
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  padding: 10px 20px;
+  padding: 15px 30px;
 `;
 
 const Left = styled.div`
@@ -50,7 +61,7 @@ const Left = styled.div`
 const Center = styled.div`
   align-items: center;
   display: flex;
-  flex: 1;
+  flex: 2;
   justify-content: center;
 `;
 const Right = styled.div`
@@ -58,6 +69,10 @@ const Right = styled.div`
   display: flex;
   flex: 1;
   justify-content: flex-end;
+`;
+
+export const Logo = styled.h1`
+  font-size: 40px;
 `;
 
 const MenuContainer = styled.ul`
@@ -68,13 +83,19 @@ const MenuContainer = styled.ul`
 
 const MenuItem = styled.li`
   cursor: pointer;
-  font-size: 14px;
+  font-size: 20px;
+  font-weight: bold;
   margin: 0 25px;
 `;
 
 const MenuItemLink = styled.a`
+  color: #666;
+  transition: all 0.5s ease;
   text-decoration: none;
-  color: #555;
+
+  &:hover {
+    color: #222;
+  }
 `;
 
 const SearchContainer = styled.div`
@@ -87,11 +108,12 @@ const SearchContainer = styled.div`
 
 const Input = styled.input`
   border: 1px solid #ccc;
-  padding: 5px;
+  border-radius: 50px;
+  padding: 7px 25px;
 `;
 
 const SearchIcon = styled(FontAwesomeIcon)`
   color: #777;
   font-size: 16px;
-  margin-left: 10px;
+  margin-left: -30px;
 `;
