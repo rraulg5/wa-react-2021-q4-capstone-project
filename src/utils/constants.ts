@@ -4,4 +4,6 @@ export const FOOTER_TEXT =
 export const MENU_ITEMS = [
   { title: 'Home', url: '#' },
   { title: 'Products', url: '#' },
+  { title: 'About', url: '#' },
+  { title: 'Contact Us', url: '#' },
 ];

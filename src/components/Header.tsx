@@ -1,10 +1,9 @@
-import React from 'react';
-import { Navigation } from './Navigation';
+import { Navbar } from './Navbar';
 
 export const Header = () => {
   return (
     <header>
-      <Navigation />
+      <Navbar />
     </header>
   );
 };
