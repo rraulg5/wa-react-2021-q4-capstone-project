@@ -1,5 +1,10 @@
 import React from 'react';
+import { FOOTER_TEXT } from '../utils/constants';
 
 export const Footer = () => {
-  return <div>Footer</div>;
+  return (
+    <footer>
+      <p>{FOOTER_TEXT}</p>
+    </footer>
+  );
 };
