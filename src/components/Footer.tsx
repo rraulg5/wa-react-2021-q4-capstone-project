@@ -1,10 +1,20 @@
-import React from 'react';
+import styled from 'styled-components';
 import { FOOTER_TEXT } from '../utils/constants';
 
 export const Footer = () => {
   return (
-    <footer>
+    <Container>
       <p>{FOOTER_TEXT}</p>
-    </footer>
+    </Container>
   );
 };
+
+const Container = styled.footer`
+  align-items: center;
+  background-color: #222;
+  color: #fff;
+  display: flex;
+  font-size: 18px;
+  justify-content: center;
+  padding: 30px;
+`;
