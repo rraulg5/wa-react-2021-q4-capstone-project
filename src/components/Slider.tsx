@@ -5,6 +5,7 @@ import styled from 'styled-components';
 
 import featuredBannersMock from '../mocks/en-us/featured-banners.json';
 import { Result } from '../interfaces/FeaturedBannersResponse';
+import { mobile } from '../responsive';
 
 export const Slider = () => {
   const banners: Result[] = featuredBannersMock.results;
@@ -48,6 +49,7 @@ const Container = styled.div`
   overflow: hidden;
   position: relative;
   width: 100%;
+  ${mobile({ height: '55vh' })}
 `;
 
 interface ArrowProps {
@@ -71,6 +73,8 @@ const Arrow = styled.div<ArrowProps>`
   top: 0;
   width: 50px;
   z-index: 2;
+
+  ${mobile({ width: 20, height: 20 })}
 `;
 
 interface WrapperProps {
@@ -117,10 +121,14 @@ const InfoContainer = styled.div`
 const Title = styled.h2`
   font-size: 70px;
   text-align: center;
+
+  ${mobile({ fontSize: 24, marginTop: -200 })}
 `;
 const Description = styled.p`
   font-size: 20px;
   margin: 50px 0;
   padding: 0 120px;
   text-align: center;
+
+  ${mobile({ fontSize: 16, padding: 20, margin: 10 })}
 `;
