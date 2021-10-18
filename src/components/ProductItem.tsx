@@ -3,10 +3,35 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
 import styled from 'styled-components';
 import { Result } from '../interfaces/ProductsResponse';
+import { mobile } from '../responsive';
 
 interface Props {
   product: Result;
 }
+
+export const ProductItem: FC<Props> = ({ product }) => {
+  return (
+    <Container>
+      <Image
+        src={product.data.mainimage.url}
+        alt={product.data.mainimage.alt!}
+      />
+      <Info>
+        <Name>{product.data.name}</Name>
+        <Price>$ {product.data.price.toLocaleString()}</Price>
+        <Category>{product.data.category.slug}</Category>
+      </Info>
+      <HoverLayer>
+        <Icon>
+          <FontAwesomeIcon icon={faSearch} />
+        </Icon>
+        <Icon>
+          <FontAwesomeIcon icon={faShoppingCart} />
+        </Icon>
+      </HoverLayer>
+    </Container>
+  );
+};
 
 const HoverLayer = styled.div`
   align-items: center;
@@ -37,16 +62,19 @@ const Container = styled.article`
   &:hover ${HoverLayer} {
     opacity: 1;
   }
+
+  ${mobile({ minWidth: 250 })}
 `;
 
 const Image = styled.img`
   height: 80%;
   z-index: 2;
+
+  ${mobile({ height: '70%' })}
 `;
 
 const Info = styled.div`
   align-items: center;
-  /* background-color: blue; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -54,6 +82,7 @@ const Info = styled.div`
 
 const Name = styled.h3`
   font-size: 24px;
+  text-align: center;
 `;
 const Price = styled.p`
   font-size: 18px;
@@ -80,27 +109,3 @@ const Icon = styled.div`
     background-color: #eee;
   }
 `;
-
-export const ProductItem: FC<Props> = ({ product }) => {
-  return (
-    <Container>
-      <Image
-        src={product.data.mainimage.url}
-        alt={product.data.mainimage.alt!}
-      />
-      <Info>
-        <Name>{product.data.name}</Name>
-        <Price>$ {product.data.price.toLocaleString()}</Price>
-        <Category>{product.data.category.slug}</Category>
-      </Info>
-      <HoverLayer>
-        <Icon>
-          <FontAwesomeIcon icon={faSearch} />
-        </Icon>
-        <Icon>
-          <FontAwesomeIcon icon={faShoppingCart} />
-        </Icon>
-      </HoverLayer>
-    </Container>
-  );
-};
