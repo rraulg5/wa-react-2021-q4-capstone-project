@@ -17,4 +17,5 @@ const Container = styled.footer`
   font-size: 18px;
   justify-content: center;
   padding: 30px;
+  text-align: center;
 `;
