@@ -124,8 +124,8 @@ In this assignment, you will continue working on your Ecommerce Store. It should
 7. Test your conditional rendering logic to navigate to the Home Page. After clicking on the Ecommerce logo in the header, you should see your Home Page content, replacing the Product List Page.
 8. Modify your Product List Page component to contain the following blocks:
 
-- 8.1. A **Sidebar** (left or right side, is up to you), it should contain a list of categories from [this mock file](/blob/main/mocks/en-us/product-categories.json). The elements in this list will work as filters for your products, so, you should render the name of each category and attach to it an empty handler for the onClick event.
-- 8.2. A **Grid** of Products from [this mock file](/blob/main/mocks/en-us/products.json). For each element on this grid, you should show at least the main image of the product, its name, category, and price.
+- 8.1. A **Sidebar** (left or right side, is up to you), it should contain a list of categories from [this mock file](/mocks/en-us/product-categories.json). The elements in this list will work as filters for your products, so, you should render the name of each category and attach to it an empty handler for the onClick event.
+- 8.2. A **Grid** of Products from [this mock file](/mocks/en-us/products.json). For each element on this grid, you should show at least the main image of the product, its name, category, and price.
 
 9. Add an event handler to the categories in your sidebar, so when you click on each of them, the products in the grid are filtered. The behavior of this filters should be the following:
 
@@ -150,8 +150,8 @@ In this assignment, you will continue working on your Ecommerce Store. It should
 
 - Navigation from Home Page to Product List Page works correctly (15 points)
 - Navigation from Product List Page to Home Page works correctly (15 points)
-- The Sidebar with the list of categories is rendered correctly using the data from [the mock file](/blob/main/mocks/en-us/product-categories.json) (10 points)
-- The Products Grid is rendered correctly using the data from [the mock file](/blob/main/mocks/en-us/products.json) (25 points)
+- The Sidebar with the list of categories is rendered correctly using the data from [the mock file](/mocks/en-us/product-categories.json) (10 points)
+- The Products Grid is rendered correctly using the data from [the mock file](/mocks/en-us/products.json) (25 points)
 - Filtering behaviors are implemented correctly according to the requirements (30 points)
 - Pagination controls are rendered correctly (5 points)
 
