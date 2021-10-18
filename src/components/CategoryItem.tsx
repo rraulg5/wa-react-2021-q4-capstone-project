@@ -30,6 +30,7 @@ const Info = styled.div`
   position: absolute;
   top: 0;
   transition: all 0.5s ease;
+  text-align: center;
   width: 100%;
 
   &:hover {
