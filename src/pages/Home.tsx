@@ -1,8 +1,10 @@
 import { Slider } from '../components/Slider';
 import { Categories } from '../components/Categories';
-import { Products } from '../components/Products';
+import { ProductList } from '../components/ProductList';
 import styled from 'styled-components';
 import { FC } from 'react';
+
+import productsMock from '../mocks/en-us/featured-products.json';
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -29,7 +31,7 @@ export const Home: FC<Props> = ({ showHomepage }) => {
     <>
       <Slider />
       <Categories />
-      <Products />
+      <ProductList products={productsMock.results} />
       <ButtonContainer>
         <Button
           onClick={() => {
