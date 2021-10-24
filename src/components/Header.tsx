@@ -1,9 +1,14 @@
+import { FC } from 'react';
 import { Navbar } from './Navbar';
 
-export const Header = () => {
+interface Props {
+  showHomepage: (showHome: boolean) => void;
+}
+
+export const Header: FC<Props> = ({ showHomepage }) => {
   return (
     <header>
-      <Navbar />
+      <Navbar showHomepage={showHomepage} />
     </header>
   );
 };
