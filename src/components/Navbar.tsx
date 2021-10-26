@@ -1,3 +1,4 @@
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
 import { MENU_ITEMS } from '../utils/constants';
@@ -7,14 +8,21 @@ import {
   faShoppingCart,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useState } from 'react';
 
-export const Navbar = () => {
+interface Props {
+  showHomepage: (showHome: boolean) => void;
+}
+
+export const Navbar: FC<Props> = ({ showHomepage }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Nav>
-      <Logo href="/#">
+      <Logo
+        onClick={() => {
+          showHomepage(true);
+        }}
+      >
         FURNIT<span>FY</span>
       </Logo>
       <MobileMenuIcon icon={faBars} onClick={() => setIsOpen(!isOpen)} />
@@ -49,6 +57,7 @@ const Logo = styled.a`
   font-size: 2rem;
   font-weight: bold;
   color: #222;
+  cursor: pointer;
   padding: 1rem 0;
   text-decoration: none;
 
