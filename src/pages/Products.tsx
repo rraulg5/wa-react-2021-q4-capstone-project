@@ -4,14 +4,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
 import { ProductList } from '../components/ProductList';
-import { Result } from '../interfaces/ProductCategoriesResponse';
+import { Result as ResultCategory } from '../interfaces/ProductCategoriesResponse';
+import { Result as ResultProduct } from '../interfaces/ProductsResponse';
 import { mobile } from '../responsive';
 
-import productCategoriesMock from '../mocks/en-us/product-categories.json';
-import productsMock from '../mocks/en-us/products.json';
-
 export const Products = () => {
-  const categories: Result[] = productCategoriesMock.results;
+  const categories: ResultCategory[] = [];
+  const productsMock: ResultProduct[] = [];
   const paginationMock = Array.from(Array(5).keys());
 
   const [filters, setFilters] = useState<string[]>([]);
@@ -70,10 +69,10 @@ export const Products = () => {
           <>
             <ProductListWrapper>
               {filters.length === 0 ? (
-                <ProductList products={productsMock.results} />
+                <ProductList products={productsMock} />
               ) : (
                 <ProductList
-                  products={productsMock.results.filter((product) =>
+                  products={productsMock.filter((product) =>
                     filters.includes(product.data.category.slug)
                   )}
                 />
