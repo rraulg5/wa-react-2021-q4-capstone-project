@@ -2,15 +2,11 @@ import { Slider } from '../components/Slider';
 import { Categories } from '../components/Categories';
 import { ProductList } from '../components/ProductList';
 import styled from 'styled-components';
-import { FC, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ProductsState, Result } from '../interfaces/ProductsResponse';
 import { useProducts } from '../utils/hooks/useProducts';
 
-interface Props {
-  showHomepage: (showHome: boolean) => void;
-}
-
-export const Home: FC<Props> = ({ showHomepage }) => {
+export const Home = () => {
   const { data, isLoading }: ProductsState = useProducts();
   const [products, setProducts] = useState<Result[]>([]);
 
@@ -26,13 +22,7 @@ export const Home: FC<Props> = ({ showHomepage }) => {
       <Categories />
       <ProductList products={products} />
       <ButtonContainer>
-        <Button
-          onClick={() => {
-            showHomepage(false);
-          }}
-        >
-          View all products
-        </Button>
+        <Button>View all products</Button>
       </ButtonContainer>
     </>
   );

@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
@@ -28,19 +28,6 @@ export const Products = () => {
       e.currentTarget.style.backgroundColor = '#fff';
     }
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-
-    const timeout = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    // Cleanup - componentWillUnmount() equivalent
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, []);
 
   return (
     <Container>

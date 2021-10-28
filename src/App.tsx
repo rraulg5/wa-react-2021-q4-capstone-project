@@ -1,24 +1,26 @@
-import { GlobalStyles } from './GlobalStyles';
-import { Home } from './pages/Home';
-import { useState } from 'react';
-import { Products } from './pages/Products';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import routes from './config/routes';
+import RouteItem from './interfaces/RouteItem';
+
 import { Layout } from './components/Layout';
 
-function App() {
-  const [showHome, setShowHome] = useState(true);
-
-  const showHomepage = (showHome: boolean) => {
-    setShowHome(showHome);
-  };
-
+const App = () => {
   return (
-    <>
-      <GlobalStyles />
-      <Layout showHomepage={showHomepage}>
-        {showHome ? <Home showHomepage={showHomepage} /> : <Products />}
-      </Layout>
-    </>
+    <Router>
+      <Switch>
+        <Layout>
+          {routes.map((r: RouteItem) => (
+            <Route
+              key={r.key}
+              path={r.path}
+              component={r.component}
+              exact={r.exact}
+            />
+          ))}
+        </Layout>
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;
