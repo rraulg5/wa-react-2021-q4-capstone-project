@@ -35,7 +35,7 @@ export function useCategories() {
 
     const controller = new AbortController();
 
-    async function getFeaturedBanners() {
+    async function getCategories() {
       try {
         setCategories({ data: emptyData, isLoading: true });
 
@@ -56,7 +56,7 @@ export function useCategories() {
       }
     }
 
-    getFeaturedBanners();
+    getCategories();
 
     return () => {
       controller.abort();
