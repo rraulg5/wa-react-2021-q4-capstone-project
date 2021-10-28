@@ -4,10 +4,11 @@ import { ProductList } from '../components/ProductList';
 import styled from 'styled-components';
 import { useEffect, useState } from 'react';
 import { ProductsState, Result } from '../interfaces/ProductsResponse';
-import { useProducts } from '../utils/hooks/useProducts';
+import { useFeaturedProducts } from '../utils/hooks/useFeaturedProducts';
+import { Link } from 'react-router-dom';
 
 export const Home = () => {
-  const { data, isLoading }: ProductsState = useProducts();
+  const { data, isLoading }: ProductsState = useFeaturedProducts();
   const [products, setProducts] = useState<Result[]>([]);
 
   useEffect(() => {
@@ -22,7 +23,7 @@ export const Home = () => {
       <Categories />
       <ProductList products={products} />
       <ButtonContainer>
-        <Button>View all products</Button>
+        <Button to="/products">View all products</Button>
       </ButtonContainer>
     </>
   );
@@ -34,12 +35,16 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const Button = styled.button`
+const Button = styled(Link)`
   background-color: #222;
   border: none;
   border-radius: 1em;
   color: #fff;
-  cursor: pointer;
   font-size: 1.1em;
   padding: 1em 2em;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;

@@ -24,7 +24,7 @@ const initState: ProductsState = {
   isLoading: true,
 };
 
-export function useProducts() {
+export function useFeaturedProducts() {
   const { ref: apiRef, isLoading: isApiMetadataLoading } = useLatestAPI();
   const [products, setProducts] = useState(() => initState);
 
@@ -35,13 +35,15 @@ export function useProducts() {
 
     const controller = new AbortController();
 
-    async function getFeaturedBanners() {
+    async function getFeaturedProducts() {
       try {
         setProducts({ data: emptyData, isLoading: true });
 
         const response = await fetch(
           `${API_BASE_URL}/documents/search?ref=${apiRef}&q=${encodeURIComponent(
             '[[at(document.type, "product")]]'
+          )}&q=${encodeURIComponent(
+            '[[at(document.tags, ["Featured"])]]'
           )}&lang=en-us&pageSize=16`,
           {
             signal: controller.signal,
@@ -56,7 +58,7 @@ export function useProducts() {
       }
     }
 
-    getFeaturedBanners();
+    getFeaturedProducts();
 
     return () => {
       controller.abort();
