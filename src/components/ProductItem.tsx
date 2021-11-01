@@ -1,6 +1,10 @@
-import { faSearch, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import {
+  faChevronRight,
+  faShoppingCart,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Result } from '../interfaces/ProductsResponse';
 import { mobile } from '../responsive';
@@ -18,16 +22,23 @@ export const ProductItem: FC<Props> = ({ product }) => {
       />
       <Info>
         <Name>{product.data.name}</Name>
+
         <Price>$ {product.data.price.toLocaleString()}</Price>
         <Category>{product.data.category.slug}</Category>
       </Info>
       <HoverLayer>
-        <Icon>
-          <FontAwesomeIcon icon={faSearch} />
-        </Icon>
-        <Icon>
-          <FontAwesomeIcon icon={faShoppingCart} />
-        </Icon>
+        <HoverLayerWrapper>
+          <ShortDesc>{product.data.short_description}</ShortDesc>
+          <HoverLayerIcons>
+            <Icon to={`/product/${product.id}`}>
+              <FontAwesomeIcon icon={faChevronRight} />
+            </Icon>
+
+            <Icon to="/cart">
+              <FontAwesomeIcon icon={faShoppingCart} />
+            </Icon>
+          </HoverLayerIcons>
+        </HoverLayerWrapper>
       </HoverLayer>
     </Container>
   );
@@ -36,7 +47,7 @@ export const ProductItem: FC<Props> = ({ product }) => {
 const HoverLayer = styled.div`
   align-items: center;
   display: flex;
-  background-color: rgba(0, 0, 0, 0.35);
+  background-color: rgba(0, 0, 0, 0.5);
   height: 100%;
   justify-content: center;
   left: 0;
@@ -54,7 +65,7 @@ const Container = styled.article`
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  height: 500px;
+  height: 600px;
   margin: 5px;
   min-width: 400px;
   position: relative;
@@ -84,6 +95,14 @@ const Name = styled.h3`
   font-size: 24px;
   text-align: center;
 `;
+
+const ShortDesc = styled.div`
+  color: #fff;
+  text-align: center;
+  margin: 1em;
+  font-size: 1em;
+`;
+
 const Price = styled.p`
   font-size: 18px;
   margin: 12px 0;
@@ -94,10 +113,11 @@ const Category = styled.p`
   text-transform: capitalize;
 `;
 
-const Icon = styled.div`
+const Icon = styled(Link)`
   align-items: center;
   background-color: #fff;
   border-radius: 50%;
+  color: #222;
   display: flex;
   height: 40px;
   justify-content: center;
@@ -108,4 +128,14 @@ const Icon = styled.div`
   &:hover {
     background-color: #eee;
   }
+`;
+
+const HoverLayerWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const HoverLayerIcons = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
 `;

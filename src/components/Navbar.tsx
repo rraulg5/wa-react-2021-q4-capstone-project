@@ -1,5 +1,6 @@
-import { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import { FormEvent, useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import {
   faBars,
@@ -13,6 +14,22 @@ import { MENU_ITEMS } from '../utils/constants';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const query = new URLSearchParams(useLocation().search).get('q') || '';
+  const [searchInput, setSearchInput] = useState(query);
+  const history = useHistory();
+
+  useEffect(() => {
+    setSearchInput(query);
+  }, [query]);
+
+  const handleChangeSearch = (e: FormEvent<HTMLInputElement>) => {
+    setSearchInput(e.currentTarget.value);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    history.push(`/search?q=${searchInput}`);
+  };
 
   return (
     <Nav>
@@ -32,8 +49,16 @@ export const Navbar = () => {
         </MenuLink>
       </Menu>
       <SearchContainer isOpen={isOpen}>
-        <Input placeholder="Search..." />
-        <SearchIcon icon={faSearch} />
+        <form onSubmit={handleSubmit}>
+          <Input
+            placeholder="Search..."
+            value={searchInput}
+            onChange={handleChangeSearch}
+          />
+        </form>
+        <Link to={`/search?q=${searchInput}`}>
+          <SearchIcon icon={faSearch} />
+        </Link>
       </SearchContainer>
     </Nav>
   );
