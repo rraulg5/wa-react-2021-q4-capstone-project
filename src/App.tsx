@@ -6,7 +6,7 @@ import { Layout } from './components/Layout';
 
 const App = () => {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Switch>
         <Layout>
           {routes.map((r: RouteItem) => (
