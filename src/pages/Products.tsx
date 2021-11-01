@@ -56,7 +56,6 @@ export const Products = () => {
           }
         );
         const data: ProductsResponse = await response.json();
-        console.log(data);
 
         setProducts(data.results);
         setTotalPages(data.total_pages);
