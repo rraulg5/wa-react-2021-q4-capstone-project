@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { faSpinner, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 
@@ -15,17 +15,16 @@ import { API_BASE_URL } from '../utils/constants';
 import { useLatestAPI } from '../utils/hooks/useLatestAPI';
 import { ProductsResponse } from '../interfaces/ProductsResponse';
 import { useLocation } from 'react-router';
+import { Loading } from '../components/Loading';
+import { Pagination } from '../components/Pagination';
 
 export const Products = () => {
   const { ref: apiRef, isLoading: isLoadingApiRef } = useLatestAPI();
 
   const query = new URLSearchParams(useLocation().search);
   const [categoryURL] = useState(query.get('category'));
-  // const history = useHistory();
-  const [pagination, setPagination] = useState<number[]>([]);
-  // const [page, setPage] = useState(Number(query.get('page')) || 1);
   const [page, setPage] = useState(1);
-
+  const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState<string[]>([]);
 
   const {
@@ -57,9 +56,10 @@ export const Products = () => {
           }
         );
         const data: ProductsResponse = await response.json();
+        console.log(data);
 
         setProducts(data.results);
-        setPagination(Array.from(Array(data.total_pages + 1).keys()));
+        setTotalPages(data.total_pages);
         setIsLoadingProducts(false);
       } catch (err) {
         setProducts([]);
@@ -94,27 +94,12 @@ export const Products = () => {
     setFilters([]);
   };
 
-  const handleClickPage = (page: number) => {
-    if (page > 0 && page <= pagination.length - 1) {
-      setPage(page);
-      // history.push(`?page=${page}`);
-    }
-  };
-
   return (
     <Container>
       <Sidebar>
         <h2>Categories</h2>
         {isLoadingCategories ? (
-          <Loading>
-            <FontAwesomeIcon
-              icon={faSpinner}
-              spin={true}
-              style={{ fontSize: '2em', opacity: 0.7 }}
-            />
-            <br />
-            Loading...
-          </Loading>
+          <Loading />
         ) : (
           <CategoriesWrapper>
             {categories.map((category) => (
@@ -138,15 +123,7 @@ export const Products = () => {
       </Sidebar>
       <Main>
         {isLoadingProducts ? (
-          <Loading>
-            <FontAwesomeIcon
-              icon={faSpinner}
-              spin={true}
-              style={{ fontSize: '2em', opacity: 0.7 }}
-            />
-            <br />
-            Loading...
-          </Loading>
+          <Loading />
         ) : (
           <>
             <ProductListWrapper>
@@ -160,40 +137,12 @@ export const Products = () => {
                 />
               )}
             </ProductListWrapper>
-            <PaginationWrapper>
-              <Pagination>
-                <PaginationItem
-                  className="pag-nav"
-                  onClick={() => {
-                    handleClickPage(page - 1);
-                  }}
-                >
-                  Prev
-                </PaginationItem>
-                {pagination.map(
-                  (pag) =>
-                    pag !== 0 && (
-                      <PaginationItem
-                        className={pag === page ? 'current' : ''}
-                        key={pag}
-                        onClick={() => {
-                          handleClickPage(pag);
-                        }}
-                      >
-                        {pag}
-                      </PaginationItem>
-                    )
-                )}
-                <PaginationItem
-                  className="pag-nav"
-                  onClick={() => {
-                    handleClickPage(page + 1);
-                  }}
-                >
-                  Next
-                </PaginationItem>
-              </Pagination>
-            </PaginationWrapper>
+            {totalPages && (
+              <Pagination
+                pages={Array.from(Array(totalPages + 1).keys())}
+                onPageChange={setPage}
+              />
+            )}
           </>
         )}
       </Main>
@@ -205,14 +154,6 @@ const Container = styled.div`
   display: flex;
   justify-content: space-between;
   ${mobile({ flexDirection: 'column' })}
-`;
-
-const Loading = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 400px;
 `;
 
 const Main = styled.div`
@@ -253,49 +194,3 @@ const Sidebar = styled.div`
 `;
 
 const ProductListWrapper = styled.div``;
-
-const PaginationWrapper = styled.div`
-  padding: 1.5em;
-`;
-
-const Pagination = styled.ul`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-`;
-
-const PaginationItem = styled.li`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  font-weight: 300;
-
-  text-decoration: none;
-  border: 2px solid #eee;
-  color: #222;
-  cursor: pointer;
-  border-radius: 0.5em;
-  margin: 0 3px;
-  min-width: 45px;
-  min-height: 45px;
-
-  ${mobile({ display: 'none' })}
-
-  &.pag-nav {
-    background-color: #eee;
-    padding: 0 1.5em;
-  }
-
-  &.current,
-  &.pag-nav {
-    ${mobile({ display: 'flex' })}
-  }
-
-  &.current {
-    background-color: #333;
-    color: #fff;
-    font-weight: bold;
-  }
-`;

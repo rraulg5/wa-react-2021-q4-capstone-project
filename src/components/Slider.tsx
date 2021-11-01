@@ -9,6 +9,7 @@ import {
 } from '../interfaces/FeaturedBannersResponse';
 import { mobile } from '../responsive';
 import { useFeaturedBanners } from '../utils/hooks/useFeaturedBanners';
+import { Loading } from './Loading';
 
 export const Slider = () => {
   const { data, isLoading }: FeauturedBannersState = useFeaturedBanners();
@@ -31,7 +32,7 @@ export const Slider = () => {
   return (
     <Container>
       {isLoading ? (
-        'Loading...' //TODO: Update this with a Loading Component
+        <Loading />
       ) : (
         <>
           <Arrow direction="left" onClick={() => handleClick('left')}>
@@ -60,8 +61,10 @@ export const Slider = () => {
 };
 
 const Container = styled.div`
+  align-items: center;
   display: flex;
   height: 80vh;
+  justify-content: center;
   overflow: hidden;
   position: relative;
   width: 100%;
