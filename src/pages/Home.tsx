@@ -2,9 +2,32 @@ import { Slider } from '../components/Slider';
 import { Categories } from '../components/Categories';
 import { ProductList } from '../components/ProductList';
 import styled from 'styled-components';
-import { FC } from 'react';
+import { useEffect, useState } from 'react';
+import { ProductsState, Result } from '../interfaces/ProductsResponse';
+import { useFeaturedProducts } from '../utils/hooks/useFeaturedProducts';
+import { Link } from 'react-router-dom';
 
-import productsMock from '../mocks/en-us/featured-products.json';
+export const Home = () => {
+  const { data, isLoading }: ProductsState = useFeaturedProducts();
+  const [products, setProducts] = useState<Result[]>([]);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setProducts(data.results);
+    }
+  }, [data, isLoading]);
+
+  return (
+    <>
+      <Slider />
+      <Categories />
+      <ProductList products={products} />
+      <ButtonContainer>
+        <Button to="/products">View all products</Button>
+      </ButtonContainer>
+    </>
+  );
+};
 
 const ButtonContainer = styled.div`
   display: flex;
@@ -12,35 +35,16 @@ const ButtonContainer = styled.div`
   justify-content: center;
 `;
 
-const Button = styled.button`
+const Button = styled(Link)`
   background-color: #222;
   border: none;
   border-radius: 1em;
   color: #fff;
-  cursor: pointer;
   font-size: 1.1em;
   padding: 1em 2em;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
-
-interface Props {
-  showHomepage: (showHome: boolean) => void;
-}
-
-export const Home: FC<Props> = ({ showHomepage }) => {
-  return (
-    <>
-      <Slider />
-      <Categories />
-      <ProductList products={productsMock.results} />
-      <ButtonContainer>
-        <Button
-          onClick={() => {
-            showHomepage(false);
-          }}
-        >
-          View all products
-        </Button>
-      </ButtonContainer>
-    </>
-  );
-};

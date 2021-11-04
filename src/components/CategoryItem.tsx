@@ -1,10 +1,27 @@
 import { FC } from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Result } from '../interfaces/ProductCategoriesResponse';
 
 interface Props {
   category: Result;
 }
+
+export const CategoryItem: FC<Props> = ({ category }) => {
+  return (
+    <Container>
+      <Link to={`/products?category=${category.slugs[0]}`}>
+        <Image
+          src={category.data.main_image.url}
+          alt={category.data.main_image.alt}
+        />
+        <Info>
+          <Title>{category.data.name}</Title>
+        </Info>
+      </Link>
+    </Container>
+  );
+};
 
 const Container = styled.div`
   flex: 1;
@@ -21,7 +38,6 @@ const Image = styled.img`
 const Info = styled.div`
   align-items: center;
   background-color: rgba(0, 0, 0, 0.35);
-  cursor: pointer;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -40,17 +56,3 @@ const Info = styled.div`
 const Title = styled.h3`
   color: #fff;
 `;
-
-export const CategoryItem: FC<Props> = ({ category }) => {
-  return (
-    <Container>
-      <Image
-        src={category.data.main_image.url}
-        alt={category.data.main_image.alt}
-      />
-      <Info>
-        <Title>{category.data.name}</Title>
-      </Info>
-    </Container>
-  );
-};

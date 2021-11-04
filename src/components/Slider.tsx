@@ -1,16 +1,27 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-import featuredBannersMock from '../mocks/en-us/featured-banners.json';
-import { Result } from '../interfaces/FeaturedBannersResponse';
+import {
+  Result,
+  FeauturedBannersState,
+} from '../interfaces/FeaturedBannersResponse';
 import { mobile } from '../responsive';
+import { useFeaturedBanners } from '../utils/hooks/useFeaturedBanners';
+import { Loading } from './Loading';
 
 export const Slider = () => {
-  const banners: Result[] = featuredBannersMock.results;
-  const totalBanners = featuredBannersMock.total_results_size - 1;
+  const { data, isLoading }: FeauturedBannersState = useFeaturedBanners();
+  const [banners, setBanners] = useState<Result[]>([]);
+  const totalBanners = data.total_results_size - 1;
   const [slideIndex, setSlideIndex] = useState(0);
+
+  useEffect(() => {
+    if (!isLoading) {
+      setBanners(data.results);
+    }
+  }, [data, isLoading]);
 
   const handleClick = (direction: string) => {
     direction === 'left'
@@ -20,32 +31,40 @@ export const Slider = () => {
 
   return (
     <Container>
-      <Arrow direction="left" onClick={() => handleClick('left')}>
-        <FontAwesomeIcon icon={faArrowLeft} />
-      </Arrow>
-      <Wrapper slideIndex={slideIndex}>
-        {banners.map(({ id, data }) => (
-          <Slide key={id}>
-            <ImageContainer>
-              <Image src={data.main_image.url} alt={data.main_image.alt} />
-            </ImageContainer>
-            <InfoContainer>
-              <Title>{data.title}</Title>
-              <Description>{data.description[0].text}y</Description>
-            </InfoContainer>
-          </Slide>
-        ))}
-      </Wrapper>
-      <Arrow direction="right" onClick={() => handleClick('right')}>
-        <FontAwesomeIcon icon={faArrowRight} />
-      </Arrow>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <>
+          <Arrow direction="left" onClick={() => handleClick('left')}>
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </Arrow>
+          <Wrapper slideIndex={slideIndex}>
+            {banners.map(({ id, data }) => (
+              <Slide key={id}>
+                <ImageContainer>
+                  <Image src={data.main_image.url} alt={data.main_image.alt} />
+                </ImageContainer>
+                <InfoContainer>
+                  <Title>{data.title}</Title>
+                  <Description>{data.description[0].text}</Description>
+                </InfoContainer>
+              </Slide>
+            ))}
+          </Wrapper>
+          <Arrow direction="right" onClick={() => handleClick('right')}>
+            <FontAwesomeIcon icon={faArrowRight} />
+          </Arrow>
+        </>
+      )}
     </Container>
   );
 };
 
 const Container = styled.div`
+  align-items: center;
   display: flex;
   height: 80vh;
+  justify-content: center;
   overflow: hidden;
   position: relative;
   width: 100%;

@@ -4,13 +4,12 @@ import { Header } from './Header';
 
 interface Props {
   children: ReactNode;
-  showHomepage: (showHome: boolean) => void;
 }
 
-export const Layout: FC<Props> = ({ children, showHomepage }) => {
+export const Layout: FC<Props> = ({ children }) => {
   return (
     <>
-      <Header showHomepage={showHomepage} />
+      <Header />
       <main>{children}</main>
       <Footer />
     </>

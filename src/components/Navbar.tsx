@@ -1,7 +1,7 @@
-import { FC, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router';
+import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { mobile } from '../responsive';
-import { MENU_ITEMS } from '../utils/constants';
 import {
   faBars,
   faSearch,
@@ -9,36 +9,56 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-interface Props {
-  showHomepage: (showHome: boolean) => void;
-}
+import { mobile } from '../responsive';
+import { MENU_ITEMS } from '../utils/constants';
 
-export const Navbar: FC<Props> = ({ showHomepage }) => {
+export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const query = new URLSearchParams(useLocation().search).get('q') || '';
+  const [searchInput, setSearchInput] = useState(query);
+  const history = useHistory();
+
+  useEffect(() => {
+    setSearchInput(query);
+  }, [query]);
+
+  const handleChangeSearch = (e: FormEvent<HTMLInputElement>) => {
+    setSearchInput(e.currentTarget.value);
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    history.push(`/search?q=${searchInput}`);
+  };
 
   return (
     <Nav>
-      <Logo
-        onClick={() => {
-          showHomepage(true);
-        }}
-      >
+      <Logo to="/">
         FURNIT<span>FY</span>
       </Logo>
+
       <MobileMenuIcon icon={faBars} onClick={() => setIsOpen(!isOpen)} />
       <Menu isOpen={isOpen}>
         {MENU_ITEMS.map((menu) => (
-          <MenuLink href={menu.url} key={menu.title}>
+          <MenuLink to={menu.url} activeClassName="active" key={menu.title}>
             {menu.title}
           </MenuLink>
         ))}
-        <MenuLink href="/#">
+        <MenuLink to="/#">
           <CartIcon icon={faShoppingCart} />
         </MenuLink>
       </Menu>
       <SearchContainer isOpen={isOpen}>
-        <Input placeholder="Search..." />
-        <SearchIcon icon={faSearch} />
+        <form onSubmit={handleSubmit}>
+          <Input
+            placeholder="Search..."
+            value={searchInput}
+            onChange={handleChangeSearch}
+          />
+        </form>
+        <Link to={`/search?q=${searchInput}`}>
+          <SearchIcon icon={faSearch} />
+        </Link>
       </SearchContainer>
     </Nav>
   );
@@ -53,7 +73,7 @@ const Nav = styled.nav`
   padding: 0 1.5rem;
 `;
 
-const Logo = styled.a`
+const Logo = styled(NavLink)`
   font-size: 2rem;
   font-weight: bold;
   color: #222;
@@ -86,7 +106,7 @@ const Menu = styled.div<MenuProps>`
     transition: 'max-height 0.5s ease-in',
   })}
 `;
-const MenuLink = styled.a`
+const MenuLink = styled(NavLink)`
   color: #666;
   font-size: 1.1rem;
   font-weight: bold;
@@ -98,6 +118,11 @@ const MenuLink = styled.a`
 
   &:hover {
     color: #222;
+  }
+
+  &.active {
+    color: #222;
+    text-decoration: underline;
   }
 `;
 
