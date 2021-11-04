@@ -4,6 +4,7 @@ import { Home } from '../pages/Home';
 import { Products } from '../pages/Products';
 import { ProductDetails } from '../pages/ProductDetails';
 import { Search } from '../pages/Search';
+import { NotFound404 } from '../pages/NotFound404';
 
 const routes: RouteItem[] = [
   {
@@ -39,6 +40,13 @@ const routes: RouteItem[] = [
     path: '/',
     name: 'Home',
     component: Home,
+    exact: true,
+  },
+  {
+    key: 'not-found',
+    path: '*',
+    name: 'NotFound404',
+    component: NotFound404,
     exact: true,
   },
 ];

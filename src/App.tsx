@@ -3,12 +3,13 @@ import routes from './config/routes';
 import RouteItem from './interfaces/RouteItem';
 
 import { Layout } from './components/Layout';
+import { NotFound404 } from './pages/NotFound404';
 
 const App = () => {
   return (
     <Router basename={process.env.PUBLIC_URL}>
-      <Switch>
-        <Layout>
+      <Layout>
+        <Switch>
           {routes.map((r: RouteItem) => (
             <Route
               key={r.key}
@@ -17,8 +18,8 @@ const App = () => {
               exact={r.exact}
             />
           ))}
-        </Layout>
-      </Switch>
+        </Switch>
+      </Layout>
     </Router>
   );
 };
