@@ -3,7 +3,6 @@ import routes from './config/routes';
 import RouteItem from './interfaces/RouteItem';
 
 import { Layout } from './components/Layout';
-import { NotFound404 } from './pages/NotFound404';
 
 const App = () => {
   return (

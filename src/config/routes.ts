@@ -5,8 +5,16 @@ import { Products } from '../pages/Products';
 import { ProductDetails } from '../pages/ProductDetails';
 import { Search } from '../pages/Search';
 import { NotFound404 } from '../pages/NotFound404';
+import { Cart } from '../pages/Cart';
 
 const routes: RouteItem[] = [
+  {
+    key: 'cart',
+    path: '/cart',
+    name: 'Cart',
+    component: Cart,
+    exact: true,
+  },
   {
     key: 'products',
     path: '/products',

@@ -2,15 +2,12 @@ import { FormEvent, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { Link, NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  faBars,
-  faSearch,
-  faShoppingCart,
-} from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { mobile } from '../responsive';
 import { MENU_ITEMS } from '../utils/constants';
+import { CartIcon } from './CartIcon';
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -44,8 +41,8 @@ export const Navbar = () => {
             {menu.title}
           </MenuLink>
         ))}
-        <MenuLink to="/#">
-          <CartIcon icon={faShoppingCart} />
+        <MenuLink to="/cart">
+          <CartIcon />
         </MenuLink>
       </Menu>
       <SearchContainer isOpen={isOpen}>
@@ -122,7 +119,6 @@ const MenuLink = styled(NavLink)`
 
   &.active {
     color: #222;
-    text-decoration: underline;
   }
 `;
 
@@ -157,12 +153,6 @@ const Input = styled.input`
   border: 1px solid #ccc;
   border-radius: 50px;
   padding: 7px 25px;
-`;
-
-const CartIcon = styled(FontAwesomeIcon)`
-  color: #222;
-  font-size: 1.5rem;
-  ${mobile({ display: 'flex' })};
 `;
 
 const SearchIcon = styled(FontAwesomeIcon)`
