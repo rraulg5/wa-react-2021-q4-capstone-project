@@ -29,7 +29,10 @@ export const CartProvider: FC<Props> = ({ children }) => {
       if (inCart) {
         return prev.map((product) =>
           product.item.sku === cartItem.sku
-            ? { ...product, amount: product.amount + amount }
+            ? {
+                ...product,
+                amount: Math.min(product.item.stock, product.amount + amount),
+              }
             : product
         );
       }

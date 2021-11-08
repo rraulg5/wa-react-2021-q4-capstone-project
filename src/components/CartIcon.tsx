@@ -1,13 +1,21 @@
 import styled from 'styled-components';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useContext } from 'react';
+import { CartContext, CartState } from '../context/CartProvider';
+
+const getTotalItems = (items: CartState[]) => {
+  return items.reduce((ack: number, item) => ack + item.amount, 0);
+};
 
 export const CartIcon = () => {
+  const { cartItems } = useContext(CartContext);
+
   return (
     <>
       <Icon icon={faShoppingCart} />
       <sup>
-        <Badge>1</Badge>
+        {cartItems.length > 0 && <Badge>{getTotalItems(cartItems)}</Badge>}
       </sup>
     </>
   );
