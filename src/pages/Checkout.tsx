@@ -5,6 +5,7 @@ import { FormI } from '../interfaces/FormI';
 import { mobile } from '../responsive';
 import { CartContext } from '../context/CartProvider';
 import { useHistory } from 'react-router';
+import { CartList } from '../components/CartList';
 
 export const Checkout = () => {
   const initialForm: FormI = {
@@ -73,36 +74,16 @@ export const Checkout = () => {
       <Right>
         <Summary>
           <Title>Summary</Title>
-          <hr style={{ width: '50%', textAlign: 'center', margin: '0 auto' }} />
+          <Line />
           <SummaryWrapper>
-            <Product>
-              <Amount>
-                <b>Amount</b>
-              </Amount>
-
-              <ProductName>
-                <b> Product</b>
-              </ProductName>
-              <Subtotal>
-                <b> Subtotal</b>
-              </Subtotal>
-            </Product>
-            {cartItems.map((product) => (
-              <Product key={product.item.sku}>
-                <Amount>{product.amount}</Amount>
-                <Image
-                  src={product.item.mainimage.url}
-                  width="50"
-                  alt={product.item.name}
-                />
-                <ProductName>{product.item.name}</ProductName>
-                <Subtotal>
-                  ${(product.item.price * product.amount).toLocaleString()}
-                </Subtotal>
-              </Product>
-            ))}
-            TOTAL:
-            <Button>Place Order</Button>
+            <CartList
+              cta={'Place order'}
+              ctaRoute={'/#'}
+              goBack={'Go back to cart'}
+              goBackRoute={'/cart'}
+              imgWidth={50}
+              dynamic={false}
+            />
           </SummaryWrapper>
         </Summary>
       </Right>
@@ -123,6 +104,8 @@ const Left = styled.div`
 
 const Form = styled.form`
   padding: 0 2em;
+
+  ${mobile({ padding: '0 0.5em' })}
 `;
 
 const FormWrapper = styled.ul`
@@ -169,33 +152,10 @@ const Title = styled.h3`
   text-align: center;
 `;
 
-const Product = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-evenly;
-  padding: 1em;
-  text-align: center;
-`;
-const Amount = styled.span`
-  flex: 1;
-`;
-const Image = styled.img`
-  margin: 0 10px;
-`;
-const ProductName = styled.span`
-  padding: 0.5em;
-  flex: 3;
-`;
-const Subtotal = styled.span`
-  flex: 1;
-`;
-
-const Button = styled.button`
-  background-color: teal;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  color: #fff;
-  padding: 1.2em;
+const Line = styled.hr`
+  background-color: #ccc;
+  border-color: #ccc;
+  color: #ccc;
+  width: 50%;
+  margin: 0 auto;
 `;

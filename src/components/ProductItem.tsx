@@ -1,7 +1,4 @@
-import {
-  faChevronRight,
-  faShoppingCart,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus, faMoneyCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
@@ -34,14 +31,14 @@ export const ProductItem: FC<Props> = ({ product }) => {
           <ShortDesc>{product.data.short_description}</ShortDesc>
           <HoverLayerIcons>
             <Icon to={`/product/${product.id}`}>
-              <FontAwesomeIcon icon={faChevronRight} />
+              <FontAwesomeIcon icon={faMoneyCheck} />
             </Icon>
             <Icon to="#">
               <FontAwesomeIcon
                 onClick={() => {
                   handleAddToCart(product?.data, 1);
                 }}
-                icon={faShoppingCart}
+                icon={faCartPlus}
               />
             </Icon>
           </HoverLayerIcons>

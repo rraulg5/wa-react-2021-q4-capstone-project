@@ -92,6 +92,9 @@ export const ProductDetails = () => {
                 <AmountWrapper>
                   <FontAwesomeIcon
                     icon={faMinus}
+                    style={{
+                      color: quantity === 1 ? '#ccc' : 'inherit',
+                    }}
                     onClick={() => {
                       setQuantity(Math.max(1, quantity - 1));
                     }}
@@ -99,6 +102,9 @@ export const ProductDetails = () => {
                   <Amount>{Math.min(stock, quantity)}</Amount>
                   <FontAwesomeIcon
                     icon={faPlus}
+                    style={{
+                      color: quantity === stock ? '#ccc' : 'inherit',
+                    }}
                     onClick={() => {
                       setQuantity(Math.min(stock, quantity + 1));
                     }}
