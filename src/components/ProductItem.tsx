@@ -1,11 +1,9 @@
-import {
-  faChevronRight,
-  faShoppingCart,
-} from '@fortawesome/free-solid-svg-icons';
+import { faCartPlus, faMoneyCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { FC } from 'react';
+import { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
+import { CartContext } from '../context/CartProvider';
 import { Result } from '../interfaces/ProductsResponse';
 import { mobile } from '../responsive';
 
@@ -14,6 +12,8 @@ interface Props {
 }
 
 export const ProductItem: FC<Props> = ({ product }) => {
+  const { handleAddToCart } = useContext(CartContext);
+
   return (
     <Container>
       <Image
@@ -31,11 +31,15 @@ export const ProductItem: FC<Props> = ({ product }) => {
           <ShortDesc>{product.data.short_description}</ShortDesc>
           <HoverLayerIcons>
             <Icon to={`/product/${product.id}`}>
-              <FontAwesomeIcon icon={faChevronRight} />
+              <FontAwesomeIcon icon={faMoneyCheck} />
             </Icon>
-
-            <Icon to="/cart">
-              <FontAwesomeIcon icon={faShoppingCart} />
+            <Icon to="#">
+              <FontAwesomeIcon
+                onClick={() => {
+                  handleAddToCart(product?.data, 1);
+                }}
+                icon={faCartPlus}
+              />
             </Icon>
           </HoverLayerIcons>
         </HoverLayerWrapper>

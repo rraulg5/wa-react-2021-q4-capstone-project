@@ -1,14 +1,19 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { ProductsResponse, Result } from '../interfaces/ProductsResponse';
 import { API_BASE_URL } from '../utils/constants';
 import { useLatestAPI } from '../utils/hooks/useLatestAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMinus, faPlus, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { mobile } from '../responsive';
+import { CartContext } from '../context/CartProvider';
+import { Loading } from '../components/Loading';
 
 export const ProductDetails = () => {
+  const { cartItems, handleAddToCart } = useContext(CartContext);
+  const [stock, setStock] = useState(0);
+
   const { ref: apiRef, isLoading: isLoadingApiRef } = useLatestAPI();
   const { id }: { id: string } = useParams();
   const [product, setProduct] = useState<Result>();
@@ -46,18 +51,21 @@ export const ProductDetails = () => {
     };
   }, [apiRef, isLoadingApiRef, id]);
 
+  useEffect(() => {
+    if (product?.data) {
+      const cartIdx = cartItems.findIndex(
+        (cartItem) => product.data.sku === cartItem.item.sku
+      );
+
+      const localStock = cartItems[cartIdx]?.amount | 0;
+      setStock(product.data.stock - localStock);
+    }
+  }, [cartItems, product]);
+
   return (
     <Container>
       {isLoadingApiRef ? (
-        <Loading>
-          <FontAwesomeIcon
-            icon={faSpinner}
-            spin={true}
-            style={{ fontSize: '2em', opacity: 0.7 }}
-          />
-          <br />
-          Loading...
-        </Loading>
+        <Loading />
       ) : (
         <Wrapper>
           <ImgContainer>
@@ -79,24 +87,43 @@ export const ProductDetails = () => {
             <Title>{product?.data.name}</Title>
             <Description>{product?.data.description[0].text}</Description>
             <Price>$ {product?.data.price.toLocaleString()}</Price>
-            <AmountContainer>
-              <AmountWrapper>
-                <FontAwesomeIcon
-                  icon={faMinus}
+            {stock > 0 && (
+              <AmountContainer>
+                <AmountWrapper>
+                  <FontAwesomeIcon
+                    icon={faMinus}
+                    style={{
+                      color: quantity === 1 ? '#ccc' : 'inherit',
+                    }}
+                    onClick={() => {
+                      setQuantity(Math.max(1, quantity - 1));
+                    }}
+                  />
+                  <Amount>{Math.min(stock, quantity)}</Amount>
+                  <FontAwesomeIcon
+                    icon={faPlus}
+                    style={{
+                      color: quantity === stock ? '#ccc' : 'inherit',
+                    }}
+                    onClick={() => {
+                      setQuantity(Math.min(stock, quantity + 1));
+                    }}
+                  />
+                </AmountWrapper>
+                <Button
                   onClick={() => {
-                    quantity > 1 && setQuantity(quantity - 1);
+                    handleAddToCart(product?.data!, quantity);
+                    setStock(stock - quantity);
                   }}
-                />
-                <Amount>{quantity}</Amount>
-                <FontAwesomeIcon
-                  icon={faPlus}
-                  onClick={() => {
-                    setQuantity(quantity + 1);
-                  }}
-                />
-              </AmountWrapper>
-              <Button>ADD TO CART</Button>
-            </AmountContainer>
+                >
+                  ADD TO CART
+                </Button>
+              </AmountContainer>
+            )}
+
+            <Sku>
+              <b>Stock:</b> {stock}
+            </Sku>
             <Category>
               <b>Category:</b>{' '}
               <Link to={`/products?category=${product?.data.category.slug!}`}>
@@ -104,7 +131,7 @@ export const ProductDetails = () => {
               </Link>
             </Category>
             <Tags>
-              <b>Tags</b>{' '}
+              <b>Tags:</b>{' '}
               {product?.tags.map((tag) => (
                 <span key={tag}>{tag}</span>
               ))}
@@ -136,14 +163,6 @@ export const ProductDetails = () => {
 };
 
 const Container = styled.div``;
-
-const Loading = styled.div`
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 400px;
-`;
 
 const Wrapper = styled.div`
   display: flex;
