@@ -1,10 +1,10 @@
-import { Dispatch, FC, SetStateAction, useState } from 'react';
+import { FC, useState } from 'react';
 import styled from 'styled-components';
 import { mobile } from '../responsive';
 
 interface Props {
   pages: Array<number>;
-  onPageChange: Dispatch<SetStateAction<number>>;
+  onPageChange: (page: number) => void;
 }
 
 export const Pagination: FC<Props> = ({ pages, onPageChange }) => {
@@ -35,7 +35,7 @@ export const Pagination: FC<Props> = ({ pages, onPageChange }) => {
                 className={currentPage === page ? 'current' : ''}
                 key={page}
                 onClick={() => {
-                  handleClickPage(currentPage);
+                  handleClickPage(page);
                 }}
               >
                 {page}

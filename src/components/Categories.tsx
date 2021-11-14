@@ -1,28 +1,26 @@
 import styled from 'styled-components';
-import {
-  Result,
-  ProductCategoriesState,
-} from '../interfaces/ProductCategoriesResponse';
 import { CategoryItem } from './CategoryItem';
 import { mobile } from '../responsive';
-import { useState, useEffect } from 'react';
-import { useCategories } from '../utils/hooks/useCategories';
+import { useFetch } from '../hooks/useFetch';
+import { Category } from '../interfaces/Category';
+import { Loading } from './Loading';
 
 export const Categories = () => {
-  const { data, isLoading }: ProductCategoriesState = useCategories();
-  const [categories, setCategories] = useState<Result[]>([]);
+  const endPoint = `${encodeURIComponent(
+    '[[at(document.type, "category")]]'
+  )}&lang=en-us&pageSize=30`;
 
-  useEffect(() => {
-    if (!isLoading) {
-      setCategories(data.results);
-    }
-  }, [data, isLoading]);
+  const { data, isLoading } = useFetch('categories', endPoint);
 
   return (
     <Container>
-      {categories.map((category) => (
-        <CategoryItem category={category} key={category.id} />
-      ))}
+      {isLoading ? (
+        <Loading />
+      ) : (
+        data?.results.map((category: Category) => (
+          <CategoryItem category={category} key={category.id} />
+        ))
+      )}
     </Container>
   );
 };

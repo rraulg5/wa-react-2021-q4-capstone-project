@@ -1,23 +1,24 @@
 import styled from 'styled-components';
-import { Result } from '../interfaces/ProductsResponse';
+import { Product } from '../interfaces/Product';
 import { ProductItem } from './ProductItem';
 import { FC } from 'react';
 
 interface Props {
-  products: Result[];
+  products: Product[];
 }
 
 export const ProductList: FC<Props> = ({ products }) => {
   return (
     <Container>
-      {products.length === 0 && (
+      {products.length === 0 ? (
         <NoProductsMsg>
           <p>No products were found matching your selection</p>
         </NoProductsMsg>
+      ) : (
+        products.map((product) => (
+          <ProductItem product={product} key={product.id} />
+        ))
       )}
-      {products.map((product) => (
-        <ProductItem product={product} key={product.id} />
-      ))}
     </Container>
   );
 };

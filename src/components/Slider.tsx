@@ -1,27 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import styled from 'styled-components';
 
-import {
-  Result,
-  FeauturedBannersState,
-} from '../interfaces/FeaturedBannersResponse';
 import { mobile } from '../responsive';
-import { useFeaturedBanners } from '../utils/hooks/useFeaturedBanners';
 import { Loading } from './Loading';
+import { useFetch } from '../hooks/useFetch';
+import { FeauturedBanners } from '../interfaces/FeaturedBanners';
 
 export const Slider = () => {
-  const { data, isLoading }: FeauturedBannersState = useFeaturedBanners();
-  const [banners, setBanners] = useState<Result[]>([]);
-  const totalBanners = data.total_results_size - 1;
-  const [slideIndex, setSlideIndex] = useState(0);
+  const endPoint = `${encodeURIComponent(
+    '[[at(document.type, "banner")]]'
+  )}&lang=en-us&pageSize=5`;
+
+  const { data, isLoading } = useFetch('featuredBanners', endPoint);
 
   useEffect(() => {
     if (!isLoading) {
-      setBanners(data.results);
+      setTotalBanners(data?.total_results_size! - 1);
     }
-  }, [data, isLoading]);
+  }, [isLoading, data]);
+
+  const [totalBanners, setTotalBanners] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
 
   const handleClick = (direction: string) => {
     direction === 'left'
@@ -38,8 +39,8 @@ export const Slider = () => {
           <Arrow direction="left" onClick={() => handleClick('left')}>
             <FontAwesomeIcon icon={faArrowLeft} />
           </Arrow>
-          <Wrapper slideIndex={slideIndex}>
-            {banners.map(({ id, data }) => (
+          <Wrapper slideIndex={slideIndex - 1}>
+            {data?.results.map(({ id, data }: FeauturedBanners) => (
               <Slide key={id}>
                 <ImageContainer>
                   <Image src={data.main_image.url} alt={data.main_image.alt} />

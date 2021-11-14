@@ -1,5 +1,5 @@
 import { createContext, FC, ReactNode, useState } from 'react';
-import { Data } from '../interfaces/ProductsResponse';
+import { Data } from '../interfaces/Product';
 
 interface ContextCart {
   cartItems: CartState[];

@@ -1,55 +1,34 @@
 import { useContext, useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { ProductsResponse, Result } from '../interfaces/ProductsResponse';
-import { API_BASE_URL } from '../utils/constants';
-import { useLatestAPI } from '../utils/hooks/useLatestAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { mobile } from '../responsive';
 import { CartContext } from '../context/CartProvider';
 import { Loading } from '../components/Loading';
+import { Product } from '../interfaces/Product';
+import { useFetch } from '../hooks/useFetch';
 
 export const ProductDetails = () => {
   const { cartItems, handleAddToCart } = useContext(CartContext);
   const [stock, setStock] = useState(0);
 
-  const { ref: apiRef, isLoading: isLoadingApiRef } = useLatestAPI();
   const { id }: { id: string } = useParams();
-  const [product, setProduct] = useState<Result>();
+  const [product, setProduct] = useState<Product>();
   const [productImg, setProductImg] = useState('');
   const [quantity, setQuantity] = useState(1);
 
+  const endpoint = `${encodeURIComponent(
+    `[[at(document.id, "${id}")]]`
+  )}&lang=en-us`;
+  const { data, isLoading } = useFetch('products', endpoint);
+
   useEffect(() => {
-    const controller = new AbortController();
-
-    async function getProduct() {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/documents/search?ref=${apiRef}&q=${encodeURIComponent(
-            `[[at(document.id, "${id}")]]`
-          )}&lang=en-us`,
-          {
-            signal: controller.signal,
-          }
-        );
-        const data: ProductsResponse = await response.json();
-
-        setProduct(data.results[0]);
-        setProductImg(data.results[0].data.mainimage.url);
-      } catch (err) {
-        console.error(err);
-      }
+    if (data) {
+      setProduct(data.results[0]);
+      setProductImg(data.results[0].data.mainimage.url);
     }
-
-    if (!isLoadingApiRef) {
-      getProduct();
-    }
-
-    return () => {
-      controller.abort();
-    };
-  }, [apiRef, isLoadingApiRef, id]);
+  }, [data]);
 
   useEffect(() => {
     if (product?.data) {
@@ -64,7 +43,7 @@ export const ProductDetails = () => {
 
   return (
     <Container>
-      {isLoadingApiRef ? (
+      {isLoading ? (
         <Loading />
       ) : (
         <Wrapper>
