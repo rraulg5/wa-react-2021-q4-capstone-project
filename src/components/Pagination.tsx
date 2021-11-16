@@ -21,7 +21,7 @@ export const Pagination: FC<Props> = ({ pages, onPageChange }) => {
     <PaginationWrapper>
       <PaginationList>
         <PaginationItem
-          className="pag-nav"
+          className={currentPage - 1 <= 0 ? 'disabled pag-nav' : 'pag-nav'}
           onClick={() => {
             handleClickPage(currentPage - 1);
           }}
@@ -43,7 +43,9 @@ export const Pagination: FC<Props> = ({ pages, onPageChange }) => {
             )
         )}
         <PaginationItem
-          className="pag-nav"
+          className={
+            currentPage >= pages.length - 1 ? 'disabled pag-nav' : 'pag-nav'
+          }
           onClick={() => {
             handleClickPage(currentPage + 1);
           }}
@@ -98,5 +100,10 @@ const PaginationItem = styled.li`
     background-color: #333;
     color: #fff;
     font-weight: bold;
+  }
+
+  &.disabled {
+    color: #bbb;
+    cursor: not-allowed;
   }
 `;
