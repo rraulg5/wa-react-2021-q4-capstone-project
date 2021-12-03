@@ -1,27 +1,16 @@
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { Slider } from '../components/Slider';
 import { Categories } from '../components/Categories';
-import { ProductList } from '../components/ProductList';
-import styled from 'styled-components';
-import { useEffect, useState } from 'react';
-import { ProductsState, Result } from '../interfaces/ProductsResponse';
-import { useFeaturedProducts } from '../utils/hooks/useFeaturedProducts';
-import { Link } from 'react-router-dom';
+import { FeaturedProducts } from '../components/FeaturedProducts';
 
 export const Home = () => {
-  const { data, isLoading }: ProductsState = useFeaturedProducts();
-  const [products, setProducts] = useState<Result[]>([]);
-
-  useEffect(() => {
-    if (!isLoading) {
-      setProducts(data.results);
-    }
-  }, [data, isLoading]);
-
   return (
     <>
       <Slider />
       <Categories />
-      <ProductList products={products} />
+      <FeaturedProducts />
+
       <ButtonContainer>
         <Button to="/products">View all products</Button>
       </ButtonContainer>

@@ -4,11 +4,11 @@ import { FC, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { CartContext } from '../context/CartProvider';
-import { Result } from '../interfaces/ProductsResponse';
+import { Product } from '../interfaces/Product';
 import { mobile } from '../responsive';
 
 interface Props {
-  product: Result;
+  product: Product;
 }
 
 export const ProductItem: FC<Props> = ({ product }) => {

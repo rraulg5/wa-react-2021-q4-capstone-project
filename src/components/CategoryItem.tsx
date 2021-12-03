@@ -1,10 +1,10 @@
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { Result } from '../interfaces/ProductCategoriesResponse';
+import { Category } from '../interfaces/Category';
 
 interface Props {
-  category: Result;
+  category: Category;
 }
 
 export const CategoryItem: FC<Props> = ({ category }) => {

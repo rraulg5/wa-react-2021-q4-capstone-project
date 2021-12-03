@@ -2,84 +2,55 @@ import { useEffect, useState } from 'react';
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
-
 import { ProductList } from '../components/ProductList';
-import {
-  ProductCategoriesState,
-  Result as ResultCategory,
-} from '../interfaces/ProductCategoriesResponse';
-import { Result as ResultProduct } from '../interfaces/ProductsResponse';
 import { mobile } from '../responsive';
-import { useCategories } from '../utils/hooks/useCategories';
-import { API_BASE_URL } from '../utils/constants';
-import { useLatestAPI } from '../utils/hooks/useLatestAPI';
-import { ProductsResponse } from '../interfaces/ProductsResponse';
 import { useLocation } from 'react-router';
 import { Loading } from '../components/Loading';
 import { Pagination } from '../components/Pagination';
+import { useFetch } from '../hooks/useFetch';
+import { Category as CategoryI } from '../interfaces/Category';
+import { Product } from '../interfaces/Product';
 
 export const Products = () => {
-  const { ref: apiRef, isLoading: isLoadingApiRef } = useLatestAPI();
-
   const query = new URLSearchParams(useLocation().search);
-  const [categoryURL] = useState(query.get('category'));
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [filters, setFilters] = useState<string[]>([]);
+  const [categoryURL] = useState(query.get('category'));
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const {
-    data: dataCategories,
-    isLoading: isLoadingCategories,
-  }: ProductCategoriesState = useCategories();
-  const [categories, setCategories] = useState<ResultCategory[]>([]);
+  /* Fetching Categories for Sidebar */
+  const endPointCategories = `${encodeURIComponent(
+    '[[at(document.type, "category")]]'
+  )}&lang=en-us&pageSize=30`;
 
-  const [isLoadingProducts, setIsLoadingProducts] = useState(true);
-  const [products, setProducts] = useState<ResultProduct[]>([]);
+  const { data: dataCategories, isLoading: isLoadingCategories } = useFetch(
+    'categories',
+    endPointCategories
+  );
+
+  /* Fetching Products */
+  const endPointProducts = `${encodeURIComponent(
+    '[[at(document.type, "product")]]'
+  )}&lang=en-us&pageSize=12&page=${page}`;
+
+  const { data: dataProducts, isLoading: isLoadingProducts } = useFetch(
+    'products',
+    endPointProducts
+  );
 
   useEffect(() => {
-    if (!isLoadingCategories) {
-      setCategories(dataCategories.results);
+    if (dataProducts) {
+      setProducts(dataProducts.results);
+      setTotalPages(dataProducts.total_pages);
     }
-  }, [dataCategories, isLoadingCategories]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    async function getProducts() {
-      try {
-        const response = await fetch(
-          `${API_BASE_URL}/documents/search?ref=${apiRef}&q=${encodeURIComponent(
-            '[[at(document.type, "product")]]'
-          )}&lang=en-us&pageSize=12&page=${page}`,
-          {
-            signal: controller.signal,
-          }
-        );
-        const data: ProductsResponse = await response.json();
-
-        setProducts(data.results);
-        setTotalPages(data.total_pages);
-        setIsLoadingProducts(false);
-      } catch (err) {
-        setProducts([]);
-        console.error(err);
-      }
-    }
-
-    if (!isLoadingApiRef) {
-      getProducts();
-    }
-
-    return () => {
-      controller.abort();
-    };
-  }, [apiRef, isLoadingApiRef, page]);
+  }, [dataProducts]);
 
   useEffect(() => {
     if (categoryURL) {
       setFilters([categoryURL]);
     }
-  }, [categoryURL, categories]);
+  }, [categoryURL]);
 
   const toogleFilter = (category: string) => {
     if (!filters.includes(category)) {
@@ -87,10 +58,6 @@ export const Products = () => {
     } else {
       setFilters(filters.filter((c) => c !== category));
     }
-  };
-
-  const clearFilters = () => {
-    setFilters([]);
   };
 
   return (
@@ -101,7 +68,7 @@ export const Products = () => {
           <Loading />
         ) : (
           <CategoriesWrapper>
-            {categories.map((category) => (
+            {dataCategories?.results.map((category: CategoryI) => (
               <Category
                 onClick={() => {
                   toogleFilter(category.slugs[0]);
@@ -115,7 +82,11 @@ export const Products = () => {
           </CategoriesWrapper>
         )}
         {filters.length > 0 && (
-          <ClearFilters onClick={clearFilters}>
+          <ClearFilters
+            onClick={() => {
+              setFilters([]);
+            }}
+          >
             Clear filters <FontAwesomeIcon icon={faTimesCircle} />
           </ClearFilters>
         )}
@@ -136,13 +107,13 @@ export const Products = () => {
                 />
               )}
             </ProductListWrapper>
-            {totalPages && (
-              <Pagination
-                pages={Array.from(Array(totalPages + 1).keys())}
-                onPageChange={setPage}
-              />
-            )}
           </>
+        )}
+        {totalPages && (
+          <Pagination
+            pages={Array.from(Array(totalPages + 1).keys())}
+            onPageChange={setPage}
+          />
         )}
       </Main>
     </Container>
